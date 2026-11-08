@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard - CampusFind{% endblock %}
+{% block content %}
+<section class="page-heading"><p class="eyebrow">ADMINISTRATION</p><h1>Admin dashboard</h1><p class="muted">Manage registered accounts and campus reports.</p></section>
+<div class="stats-grid"><div class="stat-card"><span>Registered users</span><strong>{{ user_count }}</strong></div><div class="stat-card"><span>Item reports</span><strong>{{ item_count }}</strong></div><div class="stat-card"><span>Messages</span><strong>{{ message_count }}</strong></div></div>
+<section class="section"><h2>Users</h2><div class="table-wrap"><table><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Joined</th><th>Update role</th></tr></thead><tbody>
+{% for user in users %}<tr><td>{{ user.name }}</td><td>{{ user.email }}</td><td>{{ user.role }}</td><td>{{ user.created_at.strftime('%d %b %Y') }}</td><td>{% if user.user_id != current_user.user_id %}<form class="inline-form" method="POST" action="{{ url_for('admin_update_role', user_id=user.user_id) }}"><select name="role"><option value="student" {% if user.role == 'student' %}selected{% endif %}>Student</option><option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Admin</option></select><button class="btn-small">Save</button></form>{% else %}Current account{% endif %}</td></tr>{% endfor %}
+</tbody></table></div></section>
+<section class="section"><h2>All item reports</h2><div class="table-wrap"><table><thead><tr><th>Item</th><th>Reporter</th><th>Type</th><th>Status</th><th>Action</th></tr></thead><tbody>
+{% for item in items %}<tr><td><a href="{{ url_for('item_details', item_id=item.item_id) }}">{{ item.title }}</a></td><td>{{ item.reporter.name }}</td><td>{{ item.listing_type }}</td><td>{{ item.status }}</td><td><form method="POST" action="{{ url_for('admin_delete_item', item_id=item.item_id) }}" onsubmit="return confirm('Delete this report?')"><button class="btn-danger">Delete</button></form></td></tr>{% else %}<tr><td colspan="5">No reports.</td></tr>{% endfor %}
+</tbody></table></div></section>
+{% endblock %}

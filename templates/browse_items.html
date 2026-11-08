@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Browse Items - CampusFind{% endblock %}
+{% block content %}
+<section class="page-heading"><p class="eyebrow">SEARCH THE CAMPUS</p><h1>Lost and found reports</h1><p class="muted">Find an item by keyword, type, category, or location.</p></section>
+<form class="filter-panel" method="GET">
+    <div><label>Keyword</label><input name="search" value="{{ search }}" placeholder="Item name or description"></div>
+    <div><label>Report type</label><select name="listing_type"><option value="">All types</option><option value="lost" {% if listing_type == 'lost' %}selected{% endif %}>Lost</option><option value="found" {% if listing_type == 'found' %}selected{% endif %}>Found</option></select></div>
+    <div><label>Category</label><select name="category_id"><option value="">All categories</option>{% for category in categories %}<option value="{{ category.category_id }}" {% if category_id == category.category_id|string %}selected{% endif %}>{{ category.category_name }}</option>{% endfor %}</select></div>
+    <div><label>Location</label><input name="location" value="{{ location }}" placeholder="Building or area"></div>
+    <button class="btn-primary" type="submit">Apply Filters</button><a class="btn-outline" href="{{ url_for('browse_items') }}">Clear</a>
+</form>
+<div class="section-heading"><h2>{{ items|length }} report(s) found</h2></div>
+<div class="grid three">
+{% for item in items %}
+    <article class="item-card">
+        {% if item.image_filename %}<img class="item-thumb" src="{{ url_for('static', filename='uploads/' + item.image_filename) }}" alt="{{ item.title }}">{% else %}<div class="item-placeholder">No photograph</div>{% endif %}
+        <div class="item-card-body"><span class="pill {{ item.listing_type }}">{{ item.listing_type|title }}</span><h3>{{ item.title }}</h3><p>{{ item.category.category_name }} · {{ item.location }}</p><p class="muted">{{ item.date_lost_found }}</p><p>{{ item.description|truncate(120) }}</p><a class="btn-primary" href="{{ url_for('item_details', item_id=item.item_id) }}">View Details</a></div>
+    </article>
+{% else %}<p class="empty-state">No matching active reports. Try changing your filters.</p>{% endfor %}
+</div>
+{% endblock %}

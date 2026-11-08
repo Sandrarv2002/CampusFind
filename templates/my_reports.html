@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}My Reports - CampusFind{% endblock %}
+{% block content %}
+<section class="page-heading"><p class="eyebrow">YOUR ACTIVITY</p><h1>My reports</h1><p class="muted">Review your submissions and update their status.</p></section>
+<div class="table-wrap"><table><thead><tr><th>Item</th><th>Type</th><th>Location</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+{% for item in items %}
+<tr><td>{{ item.title }}</td><td>{{ item.listing_type|title }}</td><td>{{ item.location }}</td><td>{{ item.date_lost_found }}</td><td><span class="pill {{ item.status }}">{{ item.status|title }}</span></td><td class="actions-cell"><a class="text-link" href="{{ url_for('item_details', item_id=item.item_id) }}">View</a>
+<form method="POST" action="{{ url_for('update_item_status', item_id=item.item_id) }}" class="inline-form"><select name="status"><option value="active" {% if item.status == 'active' %}selected{% endif %}>Active</option><option value="returned" {% if item.status == 'returned' %}selected{% endif %}>Returned</option><option value="closed" {% if item.status == 'closed' %}selected{% endif %}>Closed</option></select><button class="btn-small" type="submit">Update</button></form></td></tr>
+{% else %}<tr><td colspan="6">You have not submitted any reports.</td></tr>{% endfor %}
+</tbody></table></div>
+{% endblock %}

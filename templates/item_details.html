@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}{{ item.title }} - CampusFind{% endblock %}
+{% block content %}
+<div class="detail-layout">
+    <section class="detail-card">
+        <a class="text-link" href="{{ url_for('browse_items') }}">← Back to browse</a>
+        <div class="detail-top"><span class="pill {{ item.listing_type }}">{{ item.listing_type|title }}</span><span class="pill {{ item.status }}">{{ item.status|title }}</span></div>
+        <h1>{{ item.title }}</h1>
+        {% if item.image_filename %}<img class="detail-image" src="{{ url_for('static', filename='uploads/' + item.image_filename) }}" alt="{{ item.title }}">{% endif %}
+        <h3>Item description</h3><p class="preserve-lines">{{ item.description }}</p>
+        <div class="detail-facts"><p><strong>Category</strong><span>{{ item.category.category_name }}</span></p><p><strong>Location</strong><span>{{ item.location }}</span></p><p><strong>Date</strong><span>{{ item.date_lost_found }}</span></p><p><strong>Reported by</strong><span>{{ item.reporter.name }}</span></p></div>
+    </section>
+    <aside class="contact-card">
+        <h2>Contact reporter</h2>
+        {% if current_user.user_id == item.user_id %}
+            <p>This is your report. You can manage its status under My Reports.</p>
+        {% elif item.status == 'active' %}
+            <p>Send a private message to {{ item.reporter.name }}.</p>
+            <form method="POST"><label>Your message</label><textarea name="message" rows="6" maxlength="5000" required placeholder="Write your message..."></textarea><button class="btn-primary full-width" type="submit">Send Message</button></form>
+        {% else %}<p>This report is no longer active.</p>{% endif %}
+    </aside>
+</div>
+{% endblock %}

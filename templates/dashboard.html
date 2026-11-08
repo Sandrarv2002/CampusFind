@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - CampusFind{% endblock %}
+{% block content %}
+<section class="page-heading"><p class="eyebrow">STUDENT SPACE</p><h1>Welcome, {{ current_user.name }}!</h1><p class="muted">Manage your reports and connect with other students.</p></section>
+<div class="stats-grid">
+    <div class="stat-card"><span>Your reports</span><strong>{{ total_reports }}</strong></div>
+    <div class="stat-card"><span>Unread messages</span><strong>{{ unread_count }}</strong></div>
+</div>
+<div class="grid three dashboard-actions">
+    <article class="feature-card"><div class="feature-number">＋</div><h3>Report Lost Item</h3><p>Tell the campus community what you have lost.</p><a class="btn-primary" href="{{ url_for('report_item', type='lost') }}">Report Lost</a></article>
+    <article class="feature-card"><div class="feature-number">✓</div><h3>Report Found Item</h3><p>Help someone recover an item you found.</p><a class="btn-primary" href="{{ url_for('report_item', type='found') }}">Report Found</a></article>
+    <article class="feature-card"><div class="feature-number">⌕</div><h3>Browse Items</h3><p>Search the latest lost and found reports.</p><a class="btn-primary" href="{{ url_for('browse_items') }}">Browse Items</a></article>
+</div>
+<section class="section"><div class="section-heading"><h2>Your recent reports</h2><a class="text-link" href="{{ url_for('my_reports') }}">View all →</a></div>
+    {% for item in my_items %}
+    <div class="list-row"><div><strong>{{ item.title }}</strong><p class="muted">{{ item.listing_type|title }} · {{ item.location }}</p></div><span class="pill {{ item.status }}">{{ item.status|title }}</span><a class="text-link" href="{{ url_for('item_details', item_id=item.item_id) }}">Details</a></div>
+    {% else %}<p class="empty-state">You have not submitted any reports yet.</p>{% endfor %}
+</section>
+{% endblock %}

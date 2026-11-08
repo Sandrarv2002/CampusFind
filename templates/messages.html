@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}My Messages - CampusFind{% endblock %}
+{% block content %}
+<section class="page-heading"><p class="eyebrow">YOUR INBOX</p><h1>My messages</h1><p class="muted">Messages related to lost and found reports.</p></section>
+{% for msg in messages %}
+<article class="message-card">
+    <div class="message-heading"><strong>{% if msg.sender_id == current_user.user_id %}Sent to {{ msg.receiver.name }}{% else %}From {{ msg.sender.name }}{% endif %}</strong><span class="pill {{ 'active' if not msg.is_read and msg.receiver_id == current_user.user_id else 'closed' }}">{% if msg.sender_id == current_user.user_id %}Sent{% else %}{{ 'Read' if msg.is_read else 'Unread' }}{% endif %}</span></div>
+    <p class="muted">Regarding: {{ msg.item.title }} · {{ msg.sent_at.strftime('%d %b %Y, %I:%M %p') }}</p>
+    <p class="preserve-lines">{{ msg.message }}</p>
+    <a class="text-link" href="{{ url_for('item_details', item_id=msg.item_id) }}">View related report →</a>
+    {% if msg.receiver_id == current_user.user_id and not msg.is_read %}<form method="POST" action="{{ url_for('mark_message_read', message_id=msg.message_id) }}"><button class="btn-small" type="submit">Mark as read</button></form>{% endif %}
+</article>
+{% else %}<p class="empty-state">You do not have any messages yet.</p>{% endfor %}
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Register - CampusFind{% endblock %}
+{% block content %}
+<div class="auth-card">
+    <p class="eyebrow">JOIN CAMPUSFIND</p><h1>Create an account</h1><p class="muted">Register with your student details.</p>
+    <form method="POST">
+        <label>Full name *</label><input name="name" required maxlength="100" value="{{ request.form.get('name','') }}">
+        <label>Email address *</label><input type="email" name="email" required maxlength="150" value="{{ request.form.get('email','') }}">
+        <label>Phone number</label><input name="phone" maxlength="15" value="{{ request.form.get('phone','') }}">
+        <label>Password *</label><input type="password" name="password" required minlength="8">
+        <label>Confirm password *</label><input type="password" name="confirm_password" required minlength="8">
+        <button class="btn-primary full-width" type="submit">Create Account</button>
+    </form>
+    <p class="form-foot">Already registered? <a href="{{ url_for('login') }}">Log in</a></p>
+</div>
+{% endblock %}
